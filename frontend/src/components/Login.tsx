@@ -5,10 +5,8 @@ const Login: React.FC = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
-  // Handle form submission (unimplemented for now)
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    // Implement login logic here
     console.log("Logging in with", email, password);
   };
 

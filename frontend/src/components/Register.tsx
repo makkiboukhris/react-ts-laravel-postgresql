@@ -6,14 +6,12 @@ const Register: React.FC = () => {
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
 
-  // Handle form submission (unimplemented for now)
   const handleRegister = (e: React.FormEvent) => {
     e.preventDefault();
     if (password !== confirmPassword) {
       alert("Passwords do not match");
       return;
     }
-    // Implement registration logic here
     console.log("Registering with", email, password);
   };
 

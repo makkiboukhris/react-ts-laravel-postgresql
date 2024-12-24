@@ -14,10 +14,8 @@ class ArtEventController extends Controller
      */
     public function getAll()
     {
-        // Fetch all events
         $events = ArtEvent::all();
 
-        // Return as JSON
         return response()->json($events);
     }
 
