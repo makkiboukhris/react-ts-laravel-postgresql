@@ -20,6 +20,7 @@ const Overview: React.FC = () => {
 
   const [sortBy, setSortBy] = useState<string | null>(null);
   const [searchInput, setSearchInput] = useState<string | null>(null);
+  const [renderTrigger, setRenderTrigger] = useState<boolean>(false);
 
   const handleSort = async () => {
     try {
@@ -46,7 +47,6 @@ const Overview: React.FC = () => {
   };
 
   const handleSearch = async () => {
-    console.log(searchInput);
     try {
       const response = await fetch(
         `http://127.0.0.1:8000/api/art_event/search/?attribute=${searchInput}`,
@@ -78,6 +78,36 @@ const Overview: React.FC = () => {
       setSortBy(value);
     }
   };
+
+  const handleDeleteArtEvent = async (artEventID: number) => {
+    const userConfirmed = window.confirm(
+      "Are you sure you want to delete event number " + artEventID + "?"
+    );
+    if (userConfirmed) {
+      try {
+        const response = await fetch(
+          `http://127.0.0.1:8000/api/art_event/delete/?attribute=${artEventID}`,
+          {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        if (!response.ok) {
+          console.log("res.body" + response.body);
+          throw new Error("Error deleting item: " + artEventID);
+        }
+        setRenderTrigger((prev) => !prev);
+      } catch (error) {
+        console.error("An error occurred while deleting:", error);
+        alert(
+          "Failed to delete the event " + artEventID + ". Please try again."
+        );
+      }
+    }
+  };
+
   useEffect(() => {
     const fetchArtEvents = async () => {
       try {
@@ -93,7 +123,7 @@ const Overview: React.FC = () => {
     };
 
     fetchArtEvents();
-  }, []);
+  }, [renderTrigger]);
 
   return (
     <div>
@@ -127,7 +157,7 @@ const Overview: React.FC = () => {
             />
             <button
               className="bg-teal-500 text-white px-4 py-2 rounded-md shadow hover:bg-teal-600"
-              onClick={handleSearch}
+              onClick={() => handleSearch}
             >
               Search
             </button>
@@ -172,7 +202,7 @@ const Overview: React.FC = () => {
             </div>
             <button
               className="bg-teal-500 text-white px-4 py-2 rounded-md shadow hover:bg-teal-600"
-              onClick={handleSort}
+              onClick={() => handleSort}
             >
               Sort
             </button>
@@ -187,6 +217,7 @@ const Overview: React.FC = () => {
                 <th className="py-3 px-6 text-left">Name</th>
                 <th className="py-3 px-6 text-left">Date</th>
                 <th className="py-3 px-6 text-left">Description</th>
+                <th className="py-3 px-6 text-left">action</th>
               </tr>
             </thead>
             <tbody className="text-gray-700 text-sm font-light">
@@ -200,6 +231,14 @@ const Overview: React.FC = () => {
                   <td className="py-3 px-6 text-left">{artEvent.date}</td>
                   <td className="py-3 px-6 text-left">
                     {artEvent.description}
+                  </td>
+                  <td className="py-3 px-6 text-left text-red-500 ">
+                    <button
+                      className="hover:underline"
+                      onClick={() => handleDeleteArtEvent(artEvent.id)}
+                    >
+                      delete
+                    </button>
                   </td>
                 </tr>
               ))}

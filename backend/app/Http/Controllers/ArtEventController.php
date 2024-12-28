@@ -40,4 +40,31 @@ class ArtEventController extends Controller
 
     return response()->json($artEvents);
     }
+
+    public function delete(Request $request)
+    {
+        $artEventID = $request->query('attribute');
+    
+        try {
+            $artEvent = ArtEvent::find($artEventID);
+    
+            if (!$artEvent) {
+                return response()->json([
+                    'message' => 'Art event not found.'
+                ], 404);
+            }
+    
+            $artEvent->delete();
+    
+            return response()->json([
+                'message' => 'Art event deleted successfully.'
+            ], 200);
+    
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'An error occurred while deleting the art event.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
 }
