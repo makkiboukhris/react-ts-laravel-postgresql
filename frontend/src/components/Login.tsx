@@ -5,9 +5,25 @@ const Login: React.FC = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Logging in with", email, password);
+    try {
+      const response = await fetch(`http://127.0.0.1:8000/api/users/login`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.ok) {
+        const loginRes = await response.json();
+      } else {
+        console.error("Error logging in:", response.body);
+      }
+    } catch (error) {
+      console.error("An error occurred while logging in:", error);
+    }
   };
 
   return (

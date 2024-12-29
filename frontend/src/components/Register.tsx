@@ -2,17 +2,39 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 const Register: React.FC = () => {
+  const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
 
-  const handleRegister = (e: React.FormEvent) => {
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     if (password !== confirmPassword) {
       alert("Passwords do not match");
       return;
     }
     console.log("Registering with", email, password);
+    try {
+      const response = await fetch(`http://127.0.0.1:8000/api/users/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: email,
+          password: password,
+          name: name,
+        }),
+      });
+
+      if (response.ok) {
+        const registerRes = await response.json();
+      } else {
+        console.error("Error signing up:", response.body);
+      }
+    } catch (error) {
+      console.error("An error occurred while signing up:", error);
+    }
   };
 
   return (
@@ -22,6 +44,18 @@ const Register: React.FC = () => {
           Register
         </h1>
         <form onSubmit={handleRegister}>
+          <div className="mb-4">
+            <label className="block text-gray-700">Name</label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 rounded-md"
+              required
+            />
+          </div>
           <div className="mb-4">
             <label htmlFor="email" className="block text-gray-700">
               Email
