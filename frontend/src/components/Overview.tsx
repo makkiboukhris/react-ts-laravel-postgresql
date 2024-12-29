@@ -157,7 +157,7 @@ const Overview: React.FC = () => {
             />
             <button
               className="bg-teal-500 text-white px-4 py-2 rounded-md shadow hover:bg-teal-600"
-              onClick={() => handleSearch}
+              onClick={handleSearch}
             >
               Search
             </button>
@@ -202,7 +202,7 @@ const Overview: React.FC = () => {
             </div>
             <button
               className="bg-teal-500 text-white px-4 py-2 rounded-md shadow hover:bg-teal-600"
-              onClick={() => handleSort}
+              onClick={handleSort}
             >
               Sort
             </button>
